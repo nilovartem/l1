@@ -13,7 +13,6 @@ import (
 func main() {
 	var a = big.NewInt(2 << 20)
 	var b = big.NewInt(2 << 25)
-	//fmt.Println(a - b) not working
 	var bigInt big.Int
 	fmt.Printf("A = %v, B = %v\n", a, b)
 	fmt.Printf("A * B = %v\n", bigInt.Mul(a, b))

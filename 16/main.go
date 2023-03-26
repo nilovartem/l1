@@ -1,19 +1,20 @@
 package main
 
+/*Реализовать быструю сортировку массива
+(quicksort) встроенными методами языка.*/
 import (
 	"fmt"
 )
 
-// Реализовать быструю сортировку массива
-// (quicksort) встроенными методами языка.
-// разобрал и написал код из грокаем алгоритмы
 func main() {
+	//Создаем слайс со значениями
 	array := []int{8, 2, 10, 1}
-	//array = [23]int(quicksort(array[:]))
-	fmt.Printf("Original array = %v\n", array)
-	fmt.Printf("Sorted array = %v\n", quicksort(array))
-	//array = sort(array)
+	fmt.Printf("Original slice = %v\n", array)
+	//Вызвать функцию
+	fmt.Printf("Sorted slice = %v\n", quicksort(array))
 }
+
+// Функция, принимает slice int и возвращает slice int
 func quicksort(array []int) []int {
 	if len(array) < 2 {
 		return array
@@ -31,15 +32,10 @@ func quicksort(array []int) []int {
 				greater = append(greater, value)
 			}
 		}
-
-		//fmt.Printf("Pivot = %v\n", pivot)
-		//fmt.Printf("Less = %v\n", less)
-		//fmt.Printf("Greater = %v\n", greater)
 		var middle []int
 		middle = append(middle, pivot)
-		//less = append(quicksort(less), middle...)
+		//Немножко клоунада, но я не знаю как по другому объединить три слайса
 		array = append(quicksort(less), append(middle, quicksort(greater)...)...)
-		//fmt.Printf("Array = %v\n", array)
 		return array
 	}
 }

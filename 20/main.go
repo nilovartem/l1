@@ -1,20 +1,22 @@
 package main
 
-// Разработать программу, которая переворачивает слова в строке.
-// Пример: «snow dog sun — sun dog snow».
+/*Разработать программу, которая переворачивает слова в строке.
+Пример: «snow dog sun — sun dog snow».*/
 import (
 	"fmt"
 	"strings"
 )
 
 func main() {
-	base := "snow dog sun"
-
-	temp := strings.Fields(base)
+	str := "snow dog sun"
+	//Разбиваем строку на массив,
+	//состоящий из слов (точнее из объектов)
+	temp := strings.Fields(str)
 	builder := strings.Builder{}
 	for i := len(temp) - 1; i >= 0; i-- {
+		//Создаем новую строку и ставим убранные пробелы между словами
 		builder.WriteString(temp[i] + " ")
 	}
-	new := strings.TrimSpace(builder.String())
-	fmt.Println(new)
+	reversed := strings.TrimSpace(builder.String())
+	fmt.Println(reversed)
 }

@@ -1,5 +1,8 @@
 package main
 
+/*К каким негативным последствиям может привести
+данный фрагмент кода, и как это исправить?
+Приведите корректный пример реализации.*/
 import (
 	"fmt"
 	"math/rand"
@@ -18,7 +21,7 @@ func createHugeString(size int64) (result string) {
 	return
 }
 func someFunc() {
-	//Создаем строку из 1024 байт
+	//Создаем строку размером 1 * 2^10 = 1024 байт
 	v := createHugeString(1 << 10)
 	justString = v[:100]
 	/*Строка - это слайс из байт.
@@ -30,6 +33,7 @@ func someFunc() {
 
 }
 func newSomeFunc() {
+	//создаем строку размером 1 * 2^10 = 1024 байт
 	v := createHugeString(1 << 10)
 	/*Нарезав строку как руны (int32 коды символов стандарта Unicode),
 	мы правильно определим байтовые границы каждого символа*/
@@ -38,8 +42,10 @@ func newSomeFunc() {
 }
 
 func main() {
+	//Вызываем старую функцию
 	someFunc()
 	fmt.Printf("Damaged string: %v\n", justString)
+	//Вызываем новую функцию
 	newSomeFunc()
 	fmt.Printf("Properly defined string: %v\n", justString)
 }

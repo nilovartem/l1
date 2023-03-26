@@ -6,36 +6,32 @@ package main
 с использованием
 конкурентных вычислений.
 */
-//Улучшен - без data race
+//На базе шаблона Worker Pool
 import (
 	"fmt"
 	"sync"
-	"time"
 )
-
-/*
-Функция таймер для подсчета времени выполнения программы
-*/
-func timer(name string) func() {
-	start := time.Now()
-	return func() {
-		fmt.Printf("%s took %v\n", name, time.Since(start))
-	}
-}
 
 var sum int = 0
 
 func main() {
-	defer timer("main")()
+	//Создаем mutex
 	var mutex sync.Mutex
+	//Создаем массив, так как числа уже известны
 	numbers := [...]int{2, 4, 6, 8, 10}
+	//Создаем канал, куда будем отправлять числа из массива
 	regular := make(chan int)
+	//Создаем канал, сюда каждая горутина отправит пустую структуру
+	// размером 0 байт, как сигнал завершения своей работы
 	done := make(chan struct{})
-	//result := make(chan int, 1)
+	//Анонимная горутина для отправки значений в канал
 	go func() {
+		//Проходим по массиву
 		for _, value := range numbers {
+			//Отправляем значения в канал
 			regular <- value
 		}
+		//Закрываем канал
 		close(regular)
 	}()
 	//Запускаем горутины
@@ -43,15 +39,27 @@ func main() {
 		go worker(regular, &mutex, done)
 	}
 	for i := 0; i < len(numbers); i++ {
+		//Ожидаем приема len(numbers)-1 значений в канале done
 		<-done
 	}
-	fmt.Println(sum)
+	fmt.Printf("Sum = %v\n", sum)
 
 }
+
+// Создаем функцию и разграничиваем прием и получение для каналов
 func worker(regular <-chan int, mutex *sync.Mutex, done chan<- struct{}) {
+	//Перед return отошлем пустую структуру как знак выполненной работы
 	defer func() { done <- struct{}{} }()
+	//Запрещаем остальным горутинам доступ к переменным,
+	// к которым обращается текущая горутина
+	//Это нужно, чтобы избежать гонки, которую можно проверить
+	//флагом -race
 	mutex.Lock()
+	//Принимаем число из канала
 	value := <-regular
+	//Складываем с общей суммой
 	sum += value * value
+	//Разрешаем остальным горутинам доступ к переменным,
+	//к которым обращается текущая горутина
 	mutex.Unlock()
 }
