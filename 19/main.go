@@ -20,7 +20,7 @@ func main() {
 	//стандартный вариант
 	var str string = "🥶🥵🧐"
 	fmt.Print("Enter string:")
-	fmt.Scanln(&str)
+	fmt.Scanf("%q", &str)
 	fmt.Println("Your string:", str)
 	str = reverse(&str)
 	fmt.Println("Reversed string:", str)
